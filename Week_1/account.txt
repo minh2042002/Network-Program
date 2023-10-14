@@ -1,0 +1,5 @@
+tungct 1
+duy 0
+minhtd 1
+minhcy 0
+tungbt 1

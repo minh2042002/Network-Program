@@ -1,0 +1,19 @@
+run: main.o user.o logging.o accountManage.o
+	gcc -o run main.o user.o logging.o accountManage.o
+
+main.o: main.c logging.h accountManage.h
+	gcc -c main.c
+
+accountManage.o: accountManage.c accountManage.h user.h
+	gcc -c accountManage.c
+
+user.o: user.c user.h
+	gcc -c user.c
+
+logging.o: logging.c logging.h
+	gcc -c logging.c
+
+
+
+
+
