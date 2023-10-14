@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
 
     struct addrinfo hints, *result, *ptr;
     memset(&hints, 0, sizeof(struct addrinfo));
-    hints.ai_family = AF_UNSPEC; // Hỗ trợ cả IPv4 và IPv6
+    hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
 
     int status = getaddrinfo(argv[1], NULL, &hints, &result);
@@ -26,13 +26,10 @@ int main(int argc, char *argv[]) {
         void *addr;
         char ip_address[INET6_ADDRSTRLEN];
 
-        if (ptr->ai_family == AF_INET) { // IPv4
+
             struct sockaddr_in *ipv4 = (struct sockaddr_in *)ptr->ai_addr;
             addr = &(ipv4->sin_addr);
-        } else { // IPv6
-            struct sockaddr_in6 *ipv6 = (struct sockaddr_in6 *)ptr->ai_addr;
-            addr = &(ipv6->sin6_addr);
-        }
+
 
         inet_ntop(ptr->ai_family, addr, ip_address, sizeof(ip_address));
         printf("%s\n", ip_address);
