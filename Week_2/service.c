@@ -8,15 +8,18 @@
 
 #include "service.h"
 
+
+/// @brief Tìm kiếm địa chỉ IPv4 của một tên miền bất kỳ
+/// @param domainName Tên miền của địa chỉ IPv4 cần tìm
 void findIPAddressByDomainName(char *domainName) {
     struct addrinfo hints, *result, *ptr;
     memset(&hints, 0, sizeof(struct addrinfo));
-    hints.ai_family = AF_UNSPEC; // Hỗ trợ cả IPv4 và IPv6
+    hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
 
     int status = getaddrinfo(domainName, NULL, &hints, &result);
     if (status != 0) {
-        fprintf(stderr, "Không thể phân giải tên miền hoặc địa chỉ IP.\n");
+        fprintf(stderr, "Không thể phân giải tên miền.\n");
         return;
     }
 
@@ -25,7 +28,7 @@ void findIPAddressByDomainName(char *domainName) {
         void *addr;
         char ip_address[INET6_ADDRSTRLEN];
 
-        if (ptr->ai_family == AF_INET) { // IPv4
+        if (ptr->ai_family == AF_INET) { // Check là IPv4 thì in ra
             struct sockaddr_in *ipv4 = (struct sockaddr_in *)ptr->ai_addr;
             addr = &(ipv4->sin_addr);
             inet_ntop(ptr->ai_family, addr, ip_address, sizeof(ip_address));
@@ -38,6 +41,9 @@ void findIPAddressByDomainName(char *domainName) {
     freeaddrinfo(result);
 }
 
+
+/// @brief Tìm kiếm tên miền từ một IP đã cho
+/// @param ipAddress IP của tên miền cần tìm kiếm (IPv4)
 void findDomainNameByIPAddress(char *ipAddress) {
     struct sockaddr_in sa;
     char host[NI_MAXHOST];
@@ -56,20 +62,26 @@ void findDomainNameByIPAddress(char *ipAddress) {
     }
 }
 
-int is_valid_ip(const char *input) {
+/// @brief Kiểm tra chuỗi nhập vào có đúng định dạng IPv4
+/// @param input Chuỗi nhập vào
+/// @return 
+int is_valid_ipv4(const char *input) {
     struct sockaddr_in sa;
     return inet_pton(AF_INET, input, &(sa.sin_addr)) != 0;
 }
 
+/// @brief kiểm tra chuỗi nhập vào có đúng là một domain
+/// @param input Chuỗi nhập vào
+/// @return 
 int is_valid_domain(const char *input) {
-    // Kiểm tra xem chuỗi có ký tự không hợp lệ hay không (chỉ chứa chữ cái, số và dấu chấm)
+    // Kiểm tra chuỗi ký tự chỉ chứa chữ cái, số và dấu chấm)
     for (int i = 0; input[i] != '\0'; ++i) {
         if (!isalnum(input[i]) && input[i] != '.') {
             return 0;
         }
     }
 
-    // Kiểm tra định dạng của domain (ít nhất một dấu chấm và không bắt đầu/kết thúc bằng dấu chấm)
+    // Kiểm tra định dạng của domain (ít nhất một dấu chấm và không bắt đầu hoặc kết thúc bằng dấu chấm)
     int dot_count = 0;
     int len = strlen(input);
     for (int i = 0; i < len; ++i) {
