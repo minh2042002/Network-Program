@@ -58,7 +58,7 @@ void findDomainNameByIPAddress(char *ipAddress) {
         printf("Result:\n");
         printf("%s\n", host);
     } else {
-        printf("Not found information");
+        printf("\nNot found information\n");
     }
 }
 
