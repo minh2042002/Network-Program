@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "accountManage.h"
 #include "user.h"
@@ -19,7 +20,7 @@ void login(char input[], char result[], int *isLogged)
     }
     else
     {
-        char username[50];
+        char username[100];
         printf("Username: ");
         scanf("%s", username);
 
@@ -57,12 +58,12 @@ void postMessage(char input[], char result[], char message[], int isLogged)
 {
     if (isLogged) // Logined
     {
-        printf("Enter message: ");
+        printf("Enter message:");   
         getchar();
-        fgets(message, strlen(message), stdin);
+        fgets (message, 255, stdin);
 
-        printf("Message: %s\n", message);
-        printf(message);
+        printf("Message: %s", message);
+        // printf("%s", message);
 
         strcpy(input, message);
         strcpy(result, "+OK");
@@ -79,12 +80,12 @@ void postMessage(char input[], char result[], char message[], int isLogged)
 ///                 +OK nếu thành công
 ///                 -ERR nếu có lỗi
 /// @param isLogged Trạng thái đăng nhập, 1 - Đã đăng nhập, 0 - Chưa đăng nhập
-void logout(char result[], int isLogged)
+void logout(char result[], int *isLogged)
 {
-    if (isLogged)
+    if (*isLogged)
     {
         printf("Logout is success.\n");
-        isLogged = 0;
+        *isLogged = 0;
         
         strcpy(result, "+OK");
     }
@@ -99,7 +100,7 @@ void logout(char result[], int isLogged)
 /// @param result kết quả thực thi của lệnh được lưu vào log
 ///                 +OK nếu thành công
 ///                 -ERR nếu có lỗi
-void exit(char result[])
+void exitProgram(char result[])
 {
     printf("Program is close.\n");
     strcpy(result, "+OK");

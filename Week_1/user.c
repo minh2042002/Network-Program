@@ -16,7 +16,6 @@ int searchByUsername(char userLogin[100])
 {
     User curUser;
     FILE *file = fopen("account.txt", "r");
-    int found = 0;
     while (fscanf(file, "%s %d", curUser.username, &curUser.status) == 2)
     {
         if (strcmp(curUser.username, userLogin) == 0)

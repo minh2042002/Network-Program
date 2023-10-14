@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
-#include <logging.h>
-#include <accountManage.h>
+#include "logging.h"
+#include "accountManage.h"
 
 char input[50];    // Dữ liệu nhập từ bàn phím
 char result[5];    // Kết quả thực thi của lệnh
@@ -43,11 +44,11 @@ int main()
             break;
 
         case 3:
-            logout(result, isLogged);
+            logout(result, &isLogged);
             break;
 
         case 4:
-            exit(result);
+            exitProgram(result);
             break;
         default:
             printf("Please choose from 1 to 4.\n");
