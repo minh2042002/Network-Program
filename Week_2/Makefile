@@ -1,6 +1,6 @@
-TARGET = run
+TARGET = resolver
 
-SRCS = main.c
+SRCS = main.c service.c service.h
 
 CC = gcc
 CFLAGS = -Wall -Wextra
