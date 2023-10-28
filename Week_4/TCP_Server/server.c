@@ -6,7 +6,12 @@
 void write_log(const char *log_filename, const char *log_entry) {
     FILE *log_file = fopen(log_filename, "a");
     if (log_file) {
-        fprintf(log_file, "%s\n", log_entry);
+        time_t current_time;
+        char *time_string;
+        current_time = time(NULL);
+        time_string = ctime(&current_time);
+        time_string[strlen(time_string) - 1] = '\0';  // Remove newline character from time string
+        fprintf(log_file, "[%s]%s\n", time_string, log_entry);
         fclose(log_file);
     }
 }
