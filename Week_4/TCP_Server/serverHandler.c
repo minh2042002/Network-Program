@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <arpa/inet.h>
+#include <time.h>
+#include <Arduino.h>
+#include <stdint.h>
 
 #include "serverHandler.h"
 
@@ -43,10 +46,10 @@ int bindServer(int port_number, int server_socket)
 /// @brief write log to file 
 /// @param client_addr contain ip address and port of client
 /// @param buffer information
-void write_log(struct sockaddr_in client_addr, const char *buffer)
+void write_log(uint16_t port, char* ip_address, const char *buffer)
 {
     char log_entry[256];
-    sprintf(log_entry, "[%s:%d]$%s", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port), buffer);
+    sprintf(log_entry, "[%s:%d]$%s", ip_address, port, buffer);
 
     FILE *log_file = fopen("log_20205003.txt", "a");
     if (log_file)

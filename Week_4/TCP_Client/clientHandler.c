@@ -43,9 +43,9 @@ int connectServer(char *server_ip, int port_number, int client_socket)
 /// @brief receive response from server
 /// @param client_socket a socket descriptor
 /// @param buffer response from server
-void received(int client_socket, char *buffer)
+void received(int client_socket, char *buffer, int* bytes_received)
 {
-    bytes_received = recv(client_socket, buffer, sizeof(buffer), 0);
-    buffer[bytes_received] = '\0';
+    *bytes_received = recv(client_socket, buffer, sizeof(buffer), 0);
+    buffer[*bytes_received] = '\0';
     printf("%s", buffer);
 }

@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <arpa/inet.h>
-#include <clientHandler.h>
+#include <unistd.h>
+
+#include "clientHandler.h"
 
 int main(int argc, char *argv[])
 {
@@ -33,7 +35,7 @@ int main(int argc, char *argv[])
     char buffer[256];
     int bytes_received;
 
-    received(client_socket, buffer);
+    received(client_socket, buffer, &bytes_received);
 
     char file_path[128];
     int file_size;
@@ -64,7 +66,7 @@ int main(int argc, char *argv[])
         sprintf(buffer, "UPLD %s %d", file_path, file_size);
         send(client_socket, buffer, strlen(buffer), 0);
 
-        received(client_socket, buffer);
+        received(client_socket, buffer, &bytes_received);
 
         // read file and send file
         while (!feof(file))
@@ -75,7 +77,7 @@ int main(int argc, char *argv[])
 
         fclose(file);
 
-        received(client_socket, buffer);
+        received(client_socket, buffer, &bytes_received);
     }
 
     close(client_socket);

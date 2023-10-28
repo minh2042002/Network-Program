@@ -2,7 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <arpa/inet.h>
+#include <unistd.h>
+#include <Arduino.h>
+#include <stdint.h>
 
+#include "serverHandler.h"
 
 
 int main(int argc, char *argv[]) {
@@ -46,22 +50,30 @@ int main(int argc, char *argv[]) {
         // connect is success
         printf("[+] Đã kết nối với %s:%d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
 
+        uint16_t port = ntohs(client_addr.sin_port);
+        char ip_address[INET_ADDRSTRLEN];
+        inet_ntop(AF_INET, &(client_addr.sin_addr), ip_address, INET_ADDRSTRLEN);
+        
         send(client_socket, "+OK Welcome to file server\r\n", 30, 0);
         sscanf("+OK Welcome to file server\r\n", "%s", buffer);
-        write_log(client_addr, buffer);
+        write_log(port, ip_address, buffer);
 
         // request from client
         bytes_received = recv(client_socket, buffer, sizeof(buffer), 0);
         buffer[bytes_received] = '\0';
 
-        write_log(client_addr, buffer);
+        write_log(port, ip_address, buffer);
 
         char file_name[128];
         int file_size;
         sscanf(buffer, "UPLD %s %d", file_name, &file_size);
        
         // Create new file and wait send file from client
-        file = fopen(directory_name+"/"+file_name, "wb");
+        char path[256];
+        strcpy(path, directory_name);
+        strcat(path, "/");
+        strcat(path, file_name);
+        file = fopen(path, "wb");
         if (file == NULL) {
             perror("Lỗi khi mở file");
             close(client_socket);
@@ -83,7 +95,7 @@ int main(int argc, char *argv[]) {
 
         send(client_socket, "+OK Successful upload\r\n", 24, 0);
         sscanf("+OK Successful upload\r\n", "%s", buffer);
-        write_log(client_addr, buffer);
+        write_log(port, ip_address, buffer);
 
         close(client_socket);
     }
