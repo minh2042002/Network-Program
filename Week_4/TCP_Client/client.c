@@ -62,9 +62,18 @@ int main(int argc, char *argv[])
         file_size = ftell(file);
         fseek(file, 0, SEEK_SET);
 
+        char *token = strtok(file_path, "/");
+
+        // Loop to find the last file name in the path
+        char *file_name = NULL;
+        while (token != NULL) {
+            file_name = token; // Lưu giá trị token vào fileName
+            token = strtok(NULL, "/");
+        }   
+
         // request send file with format " UPLD <name_file> <file_size> "
-        sprintf(buffer, "UPLD %s %d", file_path, file_size);
-        send(client_socket, buffer, strlen(buffer), 0);
+        sprintf(buffer, "UPLD %s %d", file_name, file_size);
+        send(client_socket, buffer, 256, 0);
 
         received(client_socket, buffer, &bytes_received);
 

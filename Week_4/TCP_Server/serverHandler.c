@@ -1,10 +1,9 @@
+#include "stdint.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <arpa/inet.h>
 #include <time.h>
-#include <Arduino.h>
-#include <stdint.h>
 
 #include "serverHandler.h"
 
@@ -54,12 +53,17 @@ void write_log(uint16_t port, char* ip_address, const char *buffer)
     FILE *log_file = fopen("log_20205003.txt", "a");
     if (log_file)
     {
-        time_t current_time;
-        char *time_string;
-        current_time = time(NULL);
-        time_string = ctime(&current_time);
-        time_string[strlen(time_string) - 1] = '\0'; // Remove newline character from time string
-        fprintf(log_file, "[%s]%s\n", time_string, log_entry);
+        time_t t = time(NULL);
+        struct tm ltm = *localtime(&t);
+
+        fprintf(log_file, "[%02d/%02d/%04d %02d:%02d:%02d] $ %s\n",
+            ltm.tm_mday, 
+            ltm.tm_mon + 1, 
+            ltm.tm_year + 1900,
+            ltm.tm_hour, 
+            ltm.tm_min, 
+            ltm.tm_sec,
+            log_entry);
         fclose(log_file);
     }
 }
